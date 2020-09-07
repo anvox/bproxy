@@ -1,0 +1,2 @@
+class Fancy
+end
