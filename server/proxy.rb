@@ -1,8 +1,8 @@
 class Proxy
-  def initialize(legacy, fancy, collector)
+  def initialize(legacy, fancy, verifier)
     @legacy = legacy
     @fancy = fancy
-    @collector = collector
+    @verifier = verifier
   end
 
   def handle(request)
@@ -19,7 +19,7 @@ class Proxy
     legacy_thread.join
     fancy_thread.join
 
-    @collector.track(request, legacy_response, fancy_response)
+    @verifier.track(request, legacy_response, fancy_response)
 
     legacy_response
   end

@@ -4,7 +4,7 @@ require_relative './response'
 require_relative './legacy'
 require_relative './fancy'
 require_relative './proxy'
-require_relative './collector'
+require_relative './verifier'
 
 require 'socket'
 
@@ -13,7 +13,7 @@ class BProxy
     @server = TCPServer.new('localhost', port)
     @legacy = Legacy.new
     @fancy = Fancy.new
-    @collector = Collector.new
+    @verifier = Verifier.new
   end
 
   def start
@@ -34,7 +34,7 @@ class BProxy
         data = client.read(request.content_length)
         request.data_lines(data)
 
-        response = Proxy.new(@legacy, @fancy, @collector).handle(request)
+        response = Proxy.new(@legacy, @fancy, @verifier).handle(request)
 
         client.write(response.to_s)
       rescue StandardError => ex
