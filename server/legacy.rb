@@ -6,11 +6,12 @@ class Legacy
   end
 
   def handle(request)
+    before_request = Time.now
     response = @connection.request(method: request.http_method.downcase.to_sym,
                                    path: request.path,
                                    body: request.body)
-
-    Response.new(response.status, response.headers, response.body)
+    after_request = Time.now
+    Response.new(response.status, response.headers, response.body, after_request - before_request)
   rescue Excon::Error::Socket => ex
     nil
   end
