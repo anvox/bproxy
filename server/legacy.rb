@@ -11,5 +11,7 @@ class Legacy
                                    body: request.body)
 
     Response.new(response.status, response.headers, response.body)
+  rescue Excon::Error::Socket => ex
+    nil
   end
 end
