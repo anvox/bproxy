@@ -1,9 +1,12 @@
 class Verifier
-  def initialize
+  def initialize(request)
+    @request = request
     @compare_data = {}
   end
 
-  def track(request, legacy_response, fancy_response)
+  attr_reader :request
+
+  def verify(legacy_response, fancy_response)
     if matched?(legacy_response, fancy_response)
       track_matched(request)
     else
@@ -14,6 +17,7 @@ class Verifier
   private
 
   def matched?(legacy_response, fancy_response)
+    # TODO: [AV] Make this flexible
     return false if legacy_response.status != fancy_response.status
     return false if legacy_response.body.to_s != fancy_response.body.to_s
     return false if legacy_response.headers != fancy_response.headers
@@ -23,8 +27,10 @@ class Verifier
   end
 
   def track_matched(request)
+    Collector.collect(request.key, true)
   end
 
   def track_unmatched(request)
+    Collector.collect(request.key, false)
   end
 end

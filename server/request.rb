@@ -6,6 +6,11 @@ class Request
     @body = nil
   end
 
+  def key
+    # TODO: [AV] Strip query
+    "#{@http_method.downcase}-#{}{@path.downcase}"
+  end
+
   def request_line(string)
     @http_method, @path, _ = string.split(' ')
   end

@@ -11,9 +11,8 @@ require 'socket'
 class BProxy
   def initialize(port = 3000)
     @server = TCPServer.new('localhost', port)
-    @legacy = Legacy.new
-    @fancy = Fancy.new
-    @verifier = Verifier.new
+    @distributor = Distributor.new(Legacy.new, Fancy.new)
+    @verifier_class = Verifier
   end
 
   def start
@@ -34,7 +33,7 @@ class BProxy
         data = client.read(request.content_length)
         request.data_lines(data)
 
-        response = Proxy.new(@legacy, @fancy, @verifier).handle(request)
+        response = Proxy.new(@distributor, @verifier_class).handle(request)
 
         client.write(response.to_s)
       rescue StandardError => ex
