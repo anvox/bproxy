@@ -1,6 +1,9 @@
 class Proxy
-  def self.handle(request)
-    Legacy.handle(request)
-    Response.new
+  def initialize
+    @legacy = Legacy.new
+  end
+
+  def handle(request)
+    @legacy.handle(request)
   end
 end

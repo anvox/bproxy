@@ -10,6 +10,7 @@ require 'socket'
 class BProxy
   def initialize(port = 3000)
     @server = TCPServer.new('localhost', port)
+    @proxy = Proxy.new
   end
 
   def start
@@ -30,7 +31,7 @@ class BProxy
         data = client.read(request.content_length)
         request.data_lines(data)
 
-        response = Proxy.handle(request)
+        response = @proxy.handle(request)
 
         client.write(response.to_s)
       rescue StandardError => ex
