@@ -7,31 +7,42 @@ require_relative './proxy'
 
 require 'socket'
 
-server = TCPServer.new('localhost', 9090)
-
-loop do
-  client = server.accept
-
-  Thread.new do
-    buffer = client.gets
-    http_method, path = buffer.split(' ')
-
-    headers = {}
-    while buffer = client.gets
-      header_name, header_value = buffer.split(' ')
-      header_name = header_name.chop
-
-      headers[header_name.downcase] = value
-    end
-    data = client.read(headers['content-length'].to_i)
-
-    request = Request.new(http_method, path, headers, data)
-    response = Proxy.hanlde(request)
-
-    client.response(response.to_s)
-  rescue StandardError
-
-  ensure
-    client.close
+class BProxy
+  def initialize(port = 3000)
+    @server = TCPServer.new('localhost', port)
   end
+
+  def start
+    loop do
+      client = server.accept
+
+      Thread.new do
+        request = Request.new
+
+        request.request_line(client.gets)
+
+        while buffer = client.gets
+          break if buffer.strip == ""
+
+          request.header_line(buffer)
+        end
+
+        data = client.read(request.content_length)
+        request.data_lines(data)
+
+        response = Proxy.handle(request)
+
+        client.write(response.to_s)
+      rescue StandardError => ex
+        puts ex
+        puts "ERROR !!!"
+      ensure
+        client.close
+      end
+    end
+  end
+
+  private
+
+  attr_reader :server
 end

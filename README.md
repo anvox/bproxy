@@ -1,5 +1,7 @@
 A proxy prototype, which measures new-endpoint and fully redirect to new after all passed.
 
+From this article https://engineering.shopify.com/blogs/engineering/how-shopify-reduced-storefront-response-times-rewrite
+
 Requirement:
 
 * Forward to old-endpoint
@@ -15,3 +17,8 @@ Consider:
 * Response verification
 * Dynamic conditions
 
+Run it
+
+```ruby
+ruby main.rb
+```

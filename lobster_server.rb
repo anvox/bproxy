@@ -3,7 +3,7 @@ require 'rack'
 require 'rack/lobster'
 
 app = Rack::Lobster.new
-server = TCPServer.new 5678
+server = TCPServer.new 3001
 
 loop do
   Thread.start(server.accept) do |session|
